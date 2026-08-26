@@ -11,6 +11,9 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'PlaceReady server running' });
 });
 
+const companyRoutes = require('./routes/companyRoutes');
+app.use('/api/companies', companyRoutes);
+
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/placeready';
 
