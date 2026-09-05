@@ -15,6 +15,8 @@ const companyRoutes = require('./routes/companyRoutes');
 app.use('/api/companies', companyRoutes);
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/resume', require('./routes/resumeRoutes'));
+app.use('/api/roadmap', require('./routes/roadmapRoutes'));
+
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/placeready';

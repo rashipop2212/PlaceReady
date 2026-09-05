@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const pdfParse = require('pdf-parse');
+const { PDFParse } = require('pdf-parse');
 const Resume = require('../models/Resume');
 const Company = require('../models/Company');
 const authMiddleware = require('../middleware/authMiddleware');
@@ -45,8 +45,10 @@ router.post('/upload', authMiddleware, upload.single('resume'), async (req, res)
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    const data = await pdfParse(req.file.buffer);
-    const extractedText = data.text;
+       const parser = new PDFParse({ data: req.file.buffer });
+    const result = await parser.getText();
+    await parser.destroy();
+    const extractedText = result.text;
 
     const resume = await Resume.findOneAndUpdate(
       { user: req.userId },
@@ -56,7 +58,9 @@ router.post('/upload', authMiddleware, upload.single('resume'), async (req, res)
 
     res.json({ message: 'Resume uploaded successfully', fileName: resume.fileName });
   } catch (err) {
+    console.error('Resume upload error:', err);
     res.status(500).json({ message: 'Failed to process resume', error: err.message });
+ 
   }
 });
 
