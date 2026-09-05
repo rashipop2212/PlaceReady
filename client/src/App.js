@@ -1,23 +1,26 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import CompanyList from './components/CompanyList';
+import CompanyForm from './components/CompanyForm';
 import './App.css';
 
 function App() {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleCompanyAdded = () => {
+    setRefreshKey((prev) => prev + 1);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="app">
+      <header className="app-header">
+        <h1>PlaceReady</h1>
+        <p>Your placement prep, all in one place</p>
       </header>
+
+      <main>
+        <CompanyForm onCompanyAdded={handleCompanyAdded} />
+        <CompanyList key={refreshKey} />
+      </main>
     </div>
   );
 }

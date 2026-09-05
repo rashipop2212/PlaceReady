@@ -1,0 +1,60 @@
+.company-form {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 480px;
+  margin: 24px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.company-form h3 {
+  margin: 0 0 4px 0;
+  color: #111827;
+}
+
+.company-form input,
+.company-form textarea {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #111827;
+  outline: none;
+}
+
+.company-form input:focus,
+.company-form textarea:focus {
+  border-color: #2563eb;
+}
+
+.deadline-label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.form-error {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 0;
+}
+
+.company-form .btn {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.company-form .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
