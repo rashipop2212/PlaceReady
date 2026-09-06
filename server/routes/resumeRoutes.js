@@ -25,8 +25,8 @@ function extractKeywords(text) {
 }
 
 function calculateMatch(resumeText, jdText) {
-  const resumeWords = new Set(extractKeywords(resumeText));
-  const jdWords = [...new Set(extractKeywords(jdText))];
+  const resumeWords = new Set(extractKeywords(resumeText || ''));
+  const jdWords = [...new Set(extractKeywords(jdText || ''))];
 
   if (jdWords.length === 0) return { percentage: 0, matched: [], missing: [] };
 
@@ -45,7 +45,7 @@ router.post('/upload', authMiddleware, upload.single('resume'), async (req, res)
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-       const parser = new PDFParse({ data: req.file.buffer });
+    const parser = new PDFParse({ data: req.file.buffer });
     const result = await parser.getText();
     await parser.destroy();
     const extractedText = result.text;
@@ -60,7 +60,6 @@ router.post('/upload', authMiddleware, upload.single('resume'), async (req, res)
   } catch (err) {
     console.error('Resume upload error:', err);
     res.status(500).json({ message: 'Failed to process resume', error: err.message });
- 
   }
 });
 
@@ -87,6 +86,34 @@ router.get('/match/:companyId', authMiddleware, async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: 'Failed to calculate match', error: err.message });
+  }
+});
+
+// Get match % against ALL companies, ranked best-first
+router.get('/match-all', authMiddleware, async (req, res) => {
+  try {
+    const resume = await Resume.findOne({ user: req.userId });
+    if (!resume) {
+      return res.status(404).json({ message: 'No resume uploaded yet' });
+    }
+
+    const companies = await Company.find();
+
+    const results = companies.map((company) => {
+      const result = calculateMatch(resume.extractedText, company.jobDescription);
+      return {
+        companyId: company._id,
+        companyName: company.name,
+        role: company.role,
+        matchPercentage: result.percentage,
+      };
+    });
+
+    results.sort((a, b) => b.matchPercentage - a.matchPercentage);
+
+    res.json({ results });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to calculate matches', error: err.message });
   }
 });
 

@@ -1,0 +1,99 @@
+.resume-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.resume-upload-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resume-upload-card h3 {
+  margin: 0;
+  color: var(--color-text);
+}
+
+.resume-status {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.resume-success {
+  background: var(--color-success-light);
+  color: var(--color-success);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 0;
+}
+
+.resume-upload-card input[type='file'] {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.match-results-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.match-results-card h3 {
+  margin: 0 0 16px 0;
+  color: var(--color-text);
+}
+
+.match-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.match-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 50px;
+  align-items: center;
+  gap: 12px;
+}
+
+.match-info {
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.match-role {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.match-bar-wrapper {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.match-bar {
+  background: var(--color-primary);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.match-percent {
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+}

@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getCompanies, deleteCompany } from '../api/companyApi';
+import { getCompanies, deleteCompany, updateCompany } from '../api/companyApi';
+import { getAllMatches } from '../api/resumeApi';
 import CountdownTimer from './CountdownTimer';
 import './CompanyList.css';
 
+const STATUS_OPTIONS = ['Not Applied', 'Applied', 'Test', 'Interview', 'Selected', 'Rejected'];
+
 function CompanyList() {
   const [companies, setCompanies] = useState([]);
+  const [matches, setMatches] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -21,14 +25,39 @@ function CompanyList() {
     }
   };
 
+  const fetchMatches = async () => {
+    try {
+      const res = await getAllMatches();
+      const map = {};
+      res.data.results.forEach((m) => {
+        map[m.companyId] = m.matchPercentage;
+      });
+      setMatches(map);
+    } catch (err) {
+      setMatches({});
+    }
+  };
+
   useEffect(() => {
     fetchCompanies();
+    fetchMatches();
   }, []);
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this company?')) return;
     await deleteCompany(id);
     fetchCompanies();
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    setCompanies((prev) =>
+      prev.map((c) => (c._id === id ? { ...c, applicationStatus: newStatus } : c))
+    );
+    try {
+      await updateCompany(id, { applicationStatus: newStatus });
+    } catch (err) {
+      fetchCompanies();
+    }
   };
 
   if (loading) return <p className="status-text">Loading companies...</p>;
@@ -52,12 +81,36 @@ function CompanyList() {
 
           <p className="jd-text">{company.jobDescription}</p>
 
+          {matches[company._id] !== undefined && (
+            <div className="match-badge-row">
+              <div className="match-badge-bar-wrapper">
+                <div
+                  className="match-badge-bar"
+                  style={{ width: `${matches[company._id]}%` }}
+                />
+              </div>
+              <span className="match-badge-text">{matches[company._id]}% match</span>
+            </div>
+          )}
+
+          <select
+            className="status-select"
+            value={company.applicationStatus || 'Not Applied'}
+            onChange={(e) => handleStatusChange(company._id, e.target.value)}
+          >
+            {STATUS_OPTIONS.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+
           <div className="company-card-footer">
             <CountdownTimer deadline={company.deadline} />
             <div className="card-actions">
               {company.registrationLink ? (
-                
-                 <a href={company.registrationLink}
+                <a
+                  href={company.registrationLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-primary"

@@ -26,8 +26,11 @@ function CountdownTimer({ deadline }) {
     return <span className="countdown countdown-expired">Deadline passed</span>;
   }
 
+  const urgencyClass =
+    timeLeft.days <= 1 ? 'countdown-urgent' : timeLeft.days <= 3 ? 'countdown-soon' : 'countdown-safe';
+
   return (
-    <span className="countdown">
+    <span className={`countdown ${urgencyClass}`}>
       {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s left
     </span>
   );

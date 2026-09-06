@@ -3,14 +3,15 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .company-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -25,12 +26,12 @@
 .company-card-header h3 {
   margin: 0;
   font-size: 18px;
-  color: #111827;
+  color: var(--color-text);
 }
 
 .package-badge {
-  background: #ecfdf5;
-  color: #059669;
+  background: var(--color-success-light);
+  color: var(--color-success);
   font-size: 12px;
   font-weight: 600;
   padding: 4px 10px;
@@ -38,7 +39,7 @@
 }
 
 .role-text {
-  color: #6b7280;
+  color: var(--color-text-muted);
   font-size: 14px;
   margin: 0;
 }
@@ -46,8 +47,12 @@
 .eligibility-text,
 .jd-text {
   font-size: 14px;
-  color: #374151;
+  color: var(--color-text);
   margin: 0;
+}
+
+.eligibility-text strong {
+  color: var(--color-text-muted);
 }
 
 .company-card-footer {
@@ -58,17 +63,25 @@
   flex-wrap: wrap;
   gap: 10px;
   padding-top: 10px;
-  border-top: 1px solid #f3f4f6;
+  border-top: 1px solid var(--color-border);
 }
 
 .countdown {
   font-size: 13px;
   font-weight: 600;
-  color: #2563eb;
 }
 
+.countdown-safe {
+  color: var(--color-success);
+}
+
+.countdown-soon {
+  color: #f59e0b;
+}
+
+.countdown-urgent,
 .countdown-expired {
-  color: #dc2626;
+  color: var(--color-danger);
 }
 
 .card-actions {
@@ -76,32 +89,53 @@
   gap: 8px;
 }
 
-.btn {
-  border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.btn-primary {
-  background: #2563eb;
-  color: white;
-}
-
-.btn-danger {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
 .status-text {
   text-align: center;
   padding: 40px;
-  color: #6b7280;
+  color: var(--color-text-muted);
 }
 
 .status-text.error {
-  color: #dc2626;
+  color: var(--color-danger);
+}
+.match-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.match-badge-bar-wrapper {
+  flex: 1;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.match-badge-bar {
+  background: var(--color-primary);
+  height: 100%;
+}
+
+.match-badge-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.status-select {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.status-select:focus {
+  border-color: var(--color-primary);
+  outline: none;
 }

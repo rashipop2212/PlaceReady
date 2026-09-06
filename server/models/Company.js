@@ -27,11 +27,17 @@ const companySchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    package: {
-      type: String,
+       package: {
+      type: String, // e.g. "6 LPA" — kept as string to allow ranges/text
       default: '',
     },
+    applicationStatus: {
+      type: String,
+      enum: ['Not Applied', 'Applied', 'Test', 'Interview', 'Selected', 'Rejected'],
+      default: 'Not Applied',
+    },
   },
+  
   { timestamps: true }
 );
 
