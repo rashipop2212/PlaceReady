@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:5000/api/companies';
+const API_BASE = `${process.env.REACT_APP_API_URL}/companies`;
 
 export const getCompanies = () => axios.get(API_BASE);
 export const getCompany = (id) => axios.get(`${API_BASE}/${id}`);

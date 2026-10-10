@@ -8,32 +8,42 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Common words to ignore when matching (not meaningful skills)
-const STOPWORDS = new Set([
-  'the', 'and', 'for', 'with', 'you', 'your', 'are', 'will', 'have', 'has',
-  'this', 'that', 'from', 'our', 'their', 'they', 'able', 'must', 'should',
-  'can', 'not', 'all', 'any', 'who', 'what', 'when', 'where', 'how', 'why',
-  'job', 'role', 'work', 'team', 'company', 'about', 'looking', 'strong',
-]);
+// Technical skills we look for in a job description
+const SKILLS = [
+  'java', 'python', 'javascript', 'typescript', 'c++', 'c#', 'sql', 'mysql',
+  'mongodb', 'postgresql', 'react', 'angular', 'nodejs', 'express', 'spring',
+  'hibernate', 'html', 'css', 'git', 'github', 'api', 'aws', 'azure', 'docker',
+  'kubernetes', 'linux', 'data structure', 'algorithms', 'oop', 'agile',
+  'junit', 'selenium', 'testing', 'django', 'flask', 'bootstrap', 'jwt', 'mern',
+];
 
-function extractKeywords(text) {
-  return text
+function normalize(text) {
+  return (text || '')
     .toLowerCase()
-    .replace(/[^a-z0-9+#\s]/g, ' ')
-    .split(/\s+/)
-    .filter((word) => word.length > 2 && !STOPWORDS.has(word));
+    .replace(/object[- ]oriented/g, 'oop')
+    .replace(/\bapis\b/g, 'api')
+    .replace(/data structures/g, 'data structure')
+    .replace(/node\.?js/g, 'nodejs');
+}
+
+function hasSkill(text, skill) {
+  const escaped = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(^|[^a-z0-9+#])${escaped}($|[^a-z0-9+#])`).test(text);
 }
 
 function calculateMatch(resumeText, jdText) {
-  const resumeWords = new Set(extractKeywords(resumeText || ''));
-  const jdWords = [...new Set(extractKeywords(jdText || ''))];
+  const resume = normalize(resumeText);
+  const jd = normalize(jdText);
 
-  if (jdWords.length === 0) return { percentage: 0, matched: [], missing: [] };
+  const required = SKILLS.filter((skill) => hasSkill(jd, skill));
 
-  const matched = jdWords.filter((word) => resumeWords.has(word));
-  const missing = jdWords.filter((word) => !resumeWords.has(word));
+  if (required.length === 0) {
+    return { percentage: 0, matched: [], missing: [] };
+  }
 
-  const percentage = Math.round((matched.length / jdWords.length) * 100);
+  const matched = required.filter((skill) => hasSkill(resume, skill));
+  const missing = required.filter((skill) => !hasSkill(resume, skill));
+  const percentage = Math.round((matched.length / required.length) * 100);
 
   return { percentage, matched, missing };
 }
@@ -101,6 +111,7 @@ router.get('/match-all', authMiddleware, async (req, res) => {
 
     const results = companies.map((company) => {
       const result = calculateMatch(resume.extractedText, company.jobDescription);
+      console.log(company.name, '| matched:', result.matched, '| missing:', result.missing);
       return {
         companyId: company._id,
         companyName: company.name,

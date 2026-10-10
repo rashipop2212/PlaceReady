@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:5000/api/resume';
+const API_BASE = `${process.env.REACT_APP_API_URL}/resume`;
 
 function authHeader() {
   const token = localStorage.getItem('token');
